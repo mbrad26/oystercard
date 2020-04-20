@@ -13,3 +13,7 @@ card.deduct(10)
 
 card.in_journey?
 card.touch_in
+
+# In order to pay for my journey
+# As a customer
+# I need to have the minimum amount (£1) for a single journey.

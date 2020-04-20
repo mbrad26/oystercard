@@ -22,13 +22,21 @@ describe Oystercard do
 
    describe "#touch_in" do
      it "can touch in" do
+       subject.top_up(15)
        subject.touch_in
        expect(subject).to be_in_journey
+     end
+
+     context "when insufficient balance" do
+       it "will not touch in" do
+         expect { subject.touch_in }.to raise_error "Insufficient balance to touch in"
+       end
      end
    end
 
    describe "#touch_out" do
      it "can touch out" do
+       subject.top_up(15)
        subject.touch_in
        subject.touch_out
        expect(subject).not_to be_in_journey
