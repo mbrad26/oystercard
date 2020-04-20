@@ -6,7 +6,7 @@ describe Oystercard do
   end
 
   describe "#top_up" do
-    it { is_expected.to respond_to(:top_up).with(1).argument }
+    # it { is_expected.to respond_to(:top_up).with(1).argument }
 
     it "can top up balance" do
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
@@ -18,6 +18,15 @@ describe Oystercard do
 
       expect { subject.top_up 1 }.to raise_error error
     end
+   end
 
-    end
-  end
+   describe '#deduct' do
+     # it { is_expected.to respond_to(:deduct).with(1).argument }
+
+     it 'deducts an amount from the balance' do
+       subject.top_up(35)
+
+       expect{ subject.deduct(5) }.to change{ subject.balance }.by -5
+     end
+   end
+end
