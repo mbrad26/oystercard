@@ -11,7 +11,8 @@ card.top_up(90)
 # As a customer
 # I need to touch in and out.
 card.in_journey?
-card.touch_in
+# station = Station.new
+# card.touch_in(station)
 
 # In order to pay for my journey
 # As a customer
@@ -28,3 +29,10 @@ card = Oystercard.new
 # card.touch_in
 # card.touch_out
 # card.balance = 9
+
+# In order to pay for my journey
+# As a customer
+# I need to know where I've travelled from
+card = Oystercard.new
+# station = Station.new
+# card.touch_in(station)
