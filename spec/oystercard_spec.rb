@@ -53,13 +53,11 @@ describe Oystercard do
        expect { subject.top_up 1 }.to raise_error error
      end
 
-     describe '#deduct' do
-       # it { is_expected.to respond_to(:deduct).with(1).argument }
-       it 'deducts an amount from the balance' do
-         expect{ subject.deduct(5) }.to change{ subject.balance }.by -5
+     context 'when journey is complete' do
+       it 'deducts the correct amount' do
+         subject.touch_in
+         expect { subject.touch_out }.to change{ subject.balance }.by -Oystercard::MINIMUM_BALANCE
        end
      end
-
    end
-
 end
