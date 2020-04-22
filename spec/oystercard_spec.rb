@@ -1,10 +1,23 @@
 require 'oystercard.rb'
 
 describe Oystercard do
-  let(:station) { double :station }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+  let(:journey) { {entry_station: entry_station, exit_station: exit_station} }
 
   it "has a balance of zero" do
     expect(subject.balance).to eq(0)
+  end
+
+  it 'has an empty list of journeys by default' do
+    expect(subject.journeys).to be_empty
+  end
+
+  it 'stores entry and exit stations' do
+    subject.top_up(5)
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
+    expect(subject.journeys).to include journey
   end
 
   describe "#top_up" do
@@ -20,31 +33,37 @@ describe Oystercard do
    end
 
    describe "#touch_in" do
+     before do
+       subject.top_up(1)
+       subject.touch_in(entry_station)
+     end
      it "can touch in" do
-       subject.top_up(15)
-       subject.touch_in(station)
        expect(subject).to be_in_journey
      end
 
      it 'stores the entry station' do
-       subject.top_up 1
-       subject.touch_in(station)
-       expect(subject.entry_station).to eq station
+       expect(subject.entry_station).to eq entry_station
      end
+   end
 
-     context "when insufficient balance" do
-       it "will not touch in" do
-         expect { subject.touch_in(station) }.to raise_error "Insufficient balance to touch in"
-       end
+   context "when insufficient balance" do
+     it "will not touch in" do
+       expect { subject.touch_in(entry_station) }.to raise_error "Insufficient balance to touch in"
      end
    end
 
    describe "#touch_out" do
+     before do
+       subject.top_up(5)
+       subject.touch_in(entry_station)
+       subject.touch_out(exit_station)
+     end
      it "can touch out" do
-       subject.top_up(15)
-       subject.touch_in(station)
-       subject.touch_out
        expect(subject).not_to be_in_journey
+     end
+
+     it 'stores exit stations' do
+       expect(subject.exit_station).to eq exit_station
      end
    end
 
@@ -60,8 +79,8 @@ describe Oystercard do
 
      context 'when journey is complete' do
        it 'deducts the correct amount' do
-         subject.touch_in(station)
-         expect { subject.touch_out }.to change{ subject.balance }.by -Oystercard::MINIMUM_BALANCE
+         subject.touch_in(entry_station)
+         expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by -Oystercard::MINIMUM_BALANCE
        end
      end
    end
